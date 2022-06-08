@@ -21,7 +21,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     List<Tweet> tweets;
 
     // Pass in the context and List of tweets
-
     public TweetsAdapter(Context context, List<Tweet> tweets) {
         this.context = context;
         this.tweets = tweets;
