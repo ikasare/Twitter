@@ -21,17 +21,20 @@
         android:layout_marginStart="5dp"
         android:layout_toEndOf="@+id/ivProfileImage"
         app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="realpaskal" />
 
     <TextView
         android:id="@+id/tvBody"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvScreenName"
-        android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
+        android:layout_marginBottom="6dp"
         android:layout_toEndOf="@+id/ivProfileImage"
-        app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
+        app:layout_constraintBottom_toTopOf="@+id/ivTweetImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tvScreenName"
         app:layout_constraintTop_toBottomOf="@+id/tvScreenName"
         tools:text="This is my tweet!!" />
 
