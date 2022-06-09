@@ -34,17 +34,20 @@ public class TimelineActivity extends AppCompatActivity {
 
     public static final String TAG = "TimelineActivity";
     private final int REQUEST_CODE = 20;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     TwitterClient client;
     RecyclerView rvTweets;
     List<Tweet> tweets;
     TweetsAdapter adapter;
     Button mbtnlogout;
+    LinearLayoutManager llm =  new LinearLayoutManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
+        rvTweets = findViewById(R.id.rvTweets);
         // Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         // setup refresh listener which triggers new data loading
@@ -55,7 +58,7 @@ public class TimelineActivity extends AppCompatActivity {
                 // Make sure to call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
                 tweets.clear();
-                populateHomeTimeline();
+                populateHomeTimeline(null);
             }
         });
         // configure refreshing colors
@@ -63,20 +66,30 @@ public class TimelineActivity extends AppCompatActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+        // Retain an instance so that you can call `resetState()` for fresh searches
+        scrollListener = new EndlessRecyclerViewScrollListener(llm) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                Tweet lastTweetDisplayed = tweets.get(tweets.size()-1);
+                String maxId = lastTweetDisplayed.id;
+                populateHomeTimeline(maxId);
+            }
+        };
+        rvTweets.addOnScrollListener(scrollListener);
 
         client = TwitterApp.getRestClient(this);
         // Find the recycler view
-        rvTweets = findViewById(R.id.rvTweets);
+
 
         // Initialize the list of tweets and adapter
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);
 
         // Recycler view setup; layout manager and the adapter
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
+        rvTweets.setLayoutManager(llm);
         rvTweets.setAdapter(adapter);
-
-        populateHomeTimeline();
 
         mbtnlogout = (Button) findViewById(R.id.btnlogout);
         mbtnlogout.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +101,7 @@ public class TimelineActivity extends AppCompatActivity {
         });
 
 
-
+        populateHomeTimeline(null);
     }
 
     @Override
@@ -125,8 +138,8 @@ public class TimelineActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void populateHomeTimeline() {
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+    private void populateHomeTimeline(String max_id) {
+        client.getHomeTimeline(max_id, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.i(TAG, "onSucess" + json.toString());
