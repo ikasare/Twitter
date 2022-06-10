@@ -30,11 +30,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvScreenName"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="6dp"
         android:layout_toEndOf="@+id/ivProfileImage"
-        app:layout_constraintBottom_toTopOf="@+id/ivTweetImage"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_min="wrap"
         app:layout_constraintStart_toStartOf="@+id/tvScreenName"
         app:layout_constraintTop_toBottomOf="@+id/tvScreenName"
         tools:text="This is my tweet!!" />
@@ -43,13 +41,39 @@
         android:id="@+id/ivTweetImage"
         android:layout_width="0dp"
         android:layout_height="150dp"
-        android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ivProfileImage"
+        app:layout_constraintStart_toStartOf="@+id/tvBody"
         app:layout_constraintTop_toBottomOf="@+id/tvBody"
-        app:layout_constraintVertical_bias="0.0"
         app:layout_constraintWidth_min="wrap"
         tools:srcCompat="@tools:sample/avatars" />
+
+<!--    <View-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="1dp"-->
+<!--        android:layout_marginTop="2dp"-->
+<!--        android:background="#D3D3D3"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/ivTweetImage" />-->
+
+    <TextView
+        android:id="@+id/tvFavouriteCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="20"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/ibFavourite"
+        app:layout_constraintTop_toTopOf="@+id/ibFavourite"
+        tools:text="20" />
+
+    <ImageButton
+        android:id="@+id/ibFavourite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/btn_star_big_off"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivTweetImage"
+        app:layout_constraintStart_toEndOf="@id/ivProfileImage"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

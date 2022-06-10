@@ -5,6 +5,7 @@ import android.opengl.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -59,6 +60,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvBody;
         TextView tvScreenName;
         ImageView ivTweetImage;
+        ImageButton ibFavouriteButton;
+        TextView tvFavoriteCount;
 
         public ViewHolder(@NonNull View itemView) { // itemView is a representation of one row of item passed; eg: a tweet
             super(itemView);
@@ -66,6 +69,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             ivTweetImage = itemView.findViewById(R.id.ivTweetImage);
+            ibFavouriteButton = itemView.findViewById(R.id.ibFavourite);
+            tvFavoriteCount = itemView.findViewById(R.id.tvFavouriteCount);
         }
         public void bind(Tweet tweet){
             int radius = 100;
@@ -80,6 +85,19 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             } else {
                 ivTweetImage.setVisibility(View.GONE);
             }
+            ibFavouriteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // if not already favourited
+                        // tell twitter i want to favorite
+                        // change drawable to big_star_big_on
+                        // increment the text inside tvFavoriteCount
+                    // else if already favorited
+                        // tell twitter i want to unfavourite
+                        // change drawable back to off
+                        // decrement text in tvfavoritecount
+                }
+            });
         }
     }
 
