@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -40,13 +41,17 @@ public class TimelineActivity extends AppCompatActivity {
     RecyclerView rvTweets;
     List<Tweet> tweets;
     TweetsAdapter adapter;
-    Button mbtnlogout;
     LinearLayoutManager llm =  new LinearLayoutManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
+        // Find the toolbar view inside the activity layout
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // Sets the Toolbar to act as the ActionBar for this Activity window.
+        // Make sure the toolbar exists in the activity and is not null
+        setSupportActionBar(toolbar);
         rvTweets = findViewById(R.id.rvTweets);
         // Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
@@ -90,17 +95,6 @@ public class TimelineActivity extends AppCompatActivity {
         // Recycler view setup; layout manager and the adapter
         rvTweets.setLayoutManager(llm);
         rvTweets.setAdapter(adapter);
-
-        mbtnlogout = (Button) findViewById(R.id.btnlogout);
-        mbtnlogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //finish(); no need to call finish as onlogout achieves the same purpose
-                onLogOutButton();
-            }
-        });
-
-
         populateHomeTimeline(null);
     }
 
@@ -119,6 +113,9 @@ public class TimelineActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ComposeActivity.class);
             startActivityForResult(intent, REQUEST_CODE);
             return true;
+        }
+        if(item.getItemId() == R.id.miLogout) {
+            onLogOutButton();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -155,7 +152,7 @@ public class TimelineActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.e(TAG, "onFailure", throwable);
+                Log.e(TAG, "onFailure" + response, throwable);
             }
         });
     }
