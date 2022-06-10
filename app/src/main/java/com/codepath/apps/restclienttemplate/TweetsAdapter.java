@@ -1,7 +1,9 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.opengl.Visibility;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import java.util.List;
+
+import okhttp3.Headers;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder>{
     Context context;
@@ -75,6 +80,18 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         public void bind(Tweet tweet){
             int radius = 100;
             int radiusimage = 50;
+            // setting the initial favourite count
+            tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
+
+            // set the ibfavourite to grey or yellow
+            if (tweet.isFavourited){
+                Drawable newImage = context.getDrawable(android.R.drawable.btn_star_big_on);
+                ibFavouriteButton.setImageDrawable(newImage);
+            }else{
+                Drawable newImage = context.getDrawable(android.R.drawable.btn_star_big_off);
+                ibFavouriteButton.setImageDrawable(newImage);
+            }
+
             tvBody.setText(tweet.body);
             tvScreenName.setText(tweet.user.screenName.concat(" ").concat("•").concat(" ").concat(tweet.timestamp));
             Glide.with(context).load(tweet.user.profileImageUrl).transform(new RoundedCorners(radius)).into(ivProfileImage);
@@ -89,13 +106,50 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 @Override
                 public void onClick(View view) {
                     // if not already favourited
+                    if(!tweet.isFavourited) {
                         // tell twitter i want to favorite
+                        TwitterApp.getRestClient(context).favorite(tweet.id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                Log.i("adapter", "this should have been favorited");
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+                            }
+                        });
                         // change drawable to big_star_big_on
+                        Drawable newImage = context.getDrawable(android.R.drawable.btn_star_big_on);
+                        ibFavouriteButton.setImageDrawable(newImage);
+                        tweet.isFavourited = true;
                         // increment the text inside tvFavoriteCount
-                    // else if already favorited
+                        tweet.favoriteCount += 1;
+                        tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
+
+                    }else {
+                        // else if already favorited
                         // tell twitter i want to unfavourite
+                        TwitterApp.getRestClient(context).unfavorite(tweet.id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                Log.i("adapter", "this should have been unfavorited");
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+                            }
+                        });
                         // change drawable back to off
+                        Drawable newImage = context.getDrawable(android.R.drawable.btn_star_big_off);
+                        ibFavouriteButton.setImageDrawable(newImage);
+                        tweet.isFavourited = false;
                         // decrement text in tvfavoritecount
+                        tweet.favoriteCount -= 1;
+                        tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
+
+                    }
                 }
             });
         }
