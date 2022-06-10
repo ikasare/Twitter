@@ -47,7 +47,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src= <img src="Twitter_App.gif" width=250><br>' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src="Twitter_App.gif" width=250><br>
 
 GIF created with [Kap](https://getkap.co/).
 
