@@ -1,6 +1,8 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.opengl.Visibility;
 import android.util.Log;
@@ -67,6 +69,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         ImageView ivTweetImage;
         ImageButton ibFavouriteButton;
         TextView tvFavoriteCount;
+        ImageButton ibReply;
 
         public ViewHolder(@NonNull View itemView) { // itemView is a representation of one row of item passed; eg: a tweet
             super(itemView);
@@ -76,12 +79,28 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             ivTweetImage = itemView.findViewById(R.id.ivTweetImage);
             ibFavouriteButton = itemView.findViewById(R.id.ibFavourite);
             tvFavoriteCount = itemView.findViewById(R.id.tvFavouriteCount);
+            ibReply = itemView.findViewById(R.id.ibReply);
         }
         public void bind(Tweet tweet){
             int radius = 100;
             int radiusimage = 50;
             // setting the initial favourite count
             tvFavoriteCount.setText(String.valueOf(tweet.favoriteCount));
+
+            ibReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // pop up a compose tweet; its not going to be a new tweet however (on its own)
+                    // it will have an extra attribute ("in_reply_to_status_id")
+                    Intent i = new Intent(context, ComposeActivity.class);
+                    i.putExtra("should_reply_to_tweet", true);
+                    i.putExtra("id_of_tweet_to_reply_to", tweet.id);
+                    i.putExtra("screenName_of_tweet_to_reply_to", tweet.user.screenName);
+                    //context.startActivity(i);
+                    ((Activity) context).startActivityForResult(i, TimelineActivity.REQUEST_CODE);
+
+                }
+            });
 
             // set the ibfavourite to grey or yellow
             if (tweet.isFavourited){
