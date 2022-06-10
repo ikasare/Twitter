@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.opengl.Visibility;
+import android.os.Parcel;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -93,9 +96,10 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     // pop up a compose tweet; its not going to be a new tweet however (on its own)
                     // it will have an extra attribute ("in_reply_to_status_id")
                     Intent i = new Intent(context, ComposeActivity.class);
-                    i.putExtra("should_reply_to_tweet", true);
-                    i.putExtra("id_of_tweet_to_reply_to", tweet.id);
-                    i.putExtra("screenName_of_tweet_to_reply_to", tweet.user.screenName);
+//                    i.putExtra("should_reply_to_tweet", true);
+//                    i.putExtra("id_of_tweet_to_reply_to", tweet.id);
+//                    i.putExtra("screenName_of_tweet_to_reply_to", tweet.user.screenName);
+                    i.putExtra("tweet_to_reply_to", Parcels.wrap(tweet));
                     //context.startActivity(i);
                     ((Activity) context).startActivityForResult(i, TimelineActivity.REQUEST_CODE);
 

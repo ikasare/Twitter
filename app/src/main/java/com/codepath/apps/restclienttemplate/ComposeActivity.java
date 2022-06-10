@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -75,9 +76,10 @@ public class ComposeActivity extends AppCompatActivity {
                     return;
                 }
                 Toast.makeText(ComposeActivity.this, tweetContent, Toast.LENGTH_LONG).show();
-                if (getIntent().hasExtra("should_reply_to_tweet")){
-                    String idOfTweetToReplyTo = getIntent().getStringExtra("id_of_tweet_to_reply_to");
-                    String screenName = getIntent().getStringExtra("screenName_of_tweet_to_reply_to");
+                if (getIntent().hasExtra("tweet_to_reply_to")){
+                    Tweet tweet = Parcels.unwrap(getIntent().getParcelableExtra("tweet_to_reply_to"));
+                    String idOfTweetToReplyTo = tweet.id;
+                    String screenName = tweet.user.screenName;
                     // client.replytotweet
                     client.replyToTweet(idOfTweetToReplyTo, "@" + screenName + " " + tweetContent, handler);
                 }
